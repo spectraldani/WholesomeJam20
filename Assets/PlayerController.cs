@@ -80,19 +80,21 @@ public class PlayerController : MonoBehaviour {
         }
 
 
-        // if ((horizontalMove > 0 && isFacingLeft) || (horizontalMove < 0 && !isFacingLeft)) {
-        //     Flip();
-        // }
+        if ((horizontalMove > 0 && isFacingLeft) || (horizontalMove < 0 && !isFacingLeft)) {
+            Flip();
+        }
         animator.SetBool("OnGround", onGround);
         animator.SetFloat("SpeedY", myRigidbody2D.velocity.y);
+        animator.SetFloat("SpeedX", Mathf.Abs(myRigidbody2D.velocity.x));
         animator.SetFloat("Charge", jumpCharge);
     }
 
     private void Flip() {
         isFacingLeft = !isFacingLeft;
-        var localScale = transform.localScale;
-        localScale.x *= -1;
-        transform.localScale = localScale;
+        GetComponent<SpriteRenderer>().flipX = isFacingLeft;
+        // var localScale = transform.localScale;
+        // localScale.x *= -1;
+        // transform.localScale = localScale;
     }
 
     [UsedImplicitly]

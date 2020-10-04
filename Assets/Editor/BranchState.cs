@@ -11,6 +11,7 @@ public class BranchState : Editor {
 
     public void OnEnable() {
         branch = (Branch)target;
+        branch.SpriteRenderer = branch.GetComponent<SpriteRenderer>();
         branch.ChangeBranchLength(state);
     }
 

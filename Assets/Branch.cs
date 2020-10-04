@@ -10,17 +10,22 @@ public class Branch : MonoBehaviour {
     [SerializeField] private Sprite mediumSprite = null;
     [SerializeField] private Sprite longSprite = null;
     [SerializeField] private Sprite shortSprite = null;
+    public SpriteRenderer SpriteRenderer = null;
+
+    public void OnEnable() {
+        SpriteRenderer = GetComponent<SpriteRenderer>();
+    }
 
     public void ChangeBranchLength(PlatformHeight height) {
         switch (height) {
             case PlatformHeight.Short:
-                transform.GetChild(0).GetComponentInChildren<SpriteRenderer>().sprite = shortSprite;
+                SpriteRenderer.sprite = shortSprite;
                 break;
             case PlatformHeight.Medium:
-                transform.GetChild(0).GetComponentInChildren<SpriteRenderer>().sprite = mediumSprite;
+                SpriteRenderer.sprite = mediumSprite;
                 break;
             case PlatformHeight.Long:
-                transform.GetChild(0).GetComponentInChildren<SpriteRenderer>().sprite = longSprite;
+                SpriteRenderer.sprite = longSprite;
                 break;
         }
     }

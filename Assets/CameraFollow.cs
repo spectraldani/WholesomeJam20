@@ -9,6 +9,9 @@ public class CameraFollow : MonoBehaviour {
     public Transform follow = null;
 
     private bool mustMoveX = false;
+    private bool mustMoveY = false;
+
+    private const double eps = 0.01;
 
     void Start() {
         camera = GetComponent<Camera>();
@@ -24,18 +27,26 @@ public class CameraFollow : MonoBehaviour {
             mustMoveX = true;
         }
 
+        if (Mathf.Abs(distance.y) > tolerance.y && !mustMoveY) {
+            mustMoveY = true;
+        }
+
         if (mustMoveX) {
-            cameraSpeed = 3;
             currentPosition.Set(distance.x * cameraSpeed * Time.deltaTime + currentPosition.x, currentPosition.y,
                 currentPosition.z);
-            if (Mathf.Abs(currentFollowPosition.x - currentPosition.x) < 0.01) {
+            if (Mathf.Abs(currentFollowPosition.x - currentPosition.x) < eps) {
                 mustMoveX = false;
                 currentPosition.Set(currentFollowPosition.x, currentPosition.y, currentPosition.z);
             }
         }
 
-        if (Mathf.Abs(distance.y) > tolerance.y) {
-            currentPosition.Set(currentPosition.x, currentPosition.y, currentPosition.z);
+        if (mustMoveY) {
+            currentPosition.Set(currentPosition.x, distance.y * cameraSpeed * Time.deltaTime + currentPosition.y,
+                currentPosition.z);
+            if (Mathf.Abs(currentFollowPosition.y - currentPosition.y) < eps) {
+                mustMoveY = false;
+                currentPosition.Set(currentPosition.x, currentFollowPosition.y, currentPosition.z);
+            }
         }
 
         // currentPosition.Set(currentFollowPosition.x, currentFollowPosition.y, currentPosition.z);

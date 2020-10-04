@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TreeMaker : MonoBehaviour {
-    [SerializeField] private bool teste = false;
+public enum PlatformType {
+    None, SBush, MBush, LBush, Branch
+}
 
-    void OnEnable() {
-        print(teste);
-    }
+public class TreeMaker : MonoBehaviour {
+    [SerializeField] private PlatformType[] grid = new PlatformType[0];
 }
