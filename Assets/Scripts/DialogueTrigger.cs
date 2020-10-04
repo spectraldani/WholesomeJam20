@@ -5,10 +5,21 @@ using UnityEngine;
 
 public class DialogueTrigger : MonoBehaviour {
     public Dialogue Dialogue;
+    private SpriteRenderer spriteRenderer = null;
+
+    void Awake() {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
 
     [UsedImplicitly]
     public void TriggerDialogue() {
-        FindObjectOfType<DialogueManager>().StartDialogue(Dialogue);
+        var position = transform.position;
+        if (spriteRenderer != null) {
+            position.y = spriteRenderer.bounds.max.y;
+            position.y += 0.5f;
+        }
+
+        FindObjectOfType<DialogueManager>().StartDialogue(Dialogue, position);
     }
 
     public void OnTriggerEnter2D(Collider2D x) {

@@ -19,6 +19,7 @@ public class CameraFollow : MonoBehaviour {
 
     void Update() {
         var currentFollowPosition = follow.position;
+        currentFollowPosition.y += 5f;
         var currentPosition = camera.transform.position;
 
         var distance = currentFollowPosition - currentPosition;

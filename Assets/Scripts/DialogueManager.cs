@@ -3,20 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour {
     private Queue<String> lines = new Queue<string>();
+    [SerializeField] private Canvas canvas = null;
     [SerializeField] private CanvasRenderer dialogueBox = null;
-    [SerializeField] private TextMeshProUGUI nameTextbox = null;
     [SerializeField] private TextMeshProUGUI bodyTextbox = null;
     [SerializeField] private Image nextSign = null;
     [SerializeField] private PlayerController player = null;
+    public Sprite[] BubbleSprites;
 
     [UsedImplicitly]
     public void Awake() {
-        dialogueBox.gameObject.SetActive(false);
+        canvas.gameObject.SetActive(false);
     }
 
     public void Update() {
@@ -25,12 +27,20 @@ public class DialogueManager : MonoBehaviour {
         }
     }
 
-    public void StartDialogue(Dialogue dialogue) {
-        dialogueBox.gameObject.SetActive(true);
+    public void StartDialogue(Dialogue dialogue, Vector2 speakerPosition) {
+        canvas.gameObject.SetActive(true);
+
+        var playerPosition = player.transform.position;
+        var howFarX = speakerPosition.x - playerPosition.x;
+
+        var dialogueImage = dialogueBox.GetComponent<Image>();
+        dialogueImage.sprite = howFarX > 0 ? BubbleSprites[1] : BubbleSprites[0];
+
+        speakerPosition.x += Mathf.Sign(-howFarX) * (((RectTransform)canvas.transform).rect.xMax* canvas.transform.localScale[0]) * 0.44f;
+
+        canvas.transform.position = speakerPosition;
         player.SetFreeze(true);
         lines.Clear();
-
-        nameTextbox.text = dialogue.name;
 
         foreach (var dialogueSentence in dialogue.sentences) {
             lines.Enqueue(dialogueSentence);
@@ -43,7 +53,7 @@ public class DialogueManager : MonoBehaviour {
     public void NextLine() {
         switch (lines.Count) {
             case 0:
-                dialogueBox.gameObject.SetActive(false);
+                canvas.gameObject.SetActive(false);
                 player.SetFreeze(false);
                 break;
             case 1:
