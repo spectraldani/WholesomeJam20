@@ -12,7 +12,8 @@ public class PlayerController : MonoBehaviour {
     [Header("Constants")] [SerializeField] private float runSpeed = 1f;
     [SerializeField] private float baseJumpForce = 400f;
     [Range(0, .3f)] [SerializeField] private float movementSmoothing = .05f;
-    private const float FeetRadius = 0.2f;
+    // private const float feetRadius = 0.2f;
+    private readonly Vector2 feetBox = new Vector2(1.7f, 0.1f);
 
     /// State Variables
     private Vector2 acceleration = Vector2.zero;
@@ -51,6 +52,8 @@ public class PlayerController : MonoBehaviour {
             var velocity = myRigidbody2D.velocity;
             velocity.x = 0;
             myRigidbody2D.velocity = velocity;
+            isCharging = false;
+            jumpCharge = 0f;
         } else {
             isFrozen = false;
         }
@@ -95,8 +98,8 @@ public class PlayerController : MonoBehaviour {
     [UsedImplicitly]
     void OnDrawGizmos() {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawSphere(feetTransform.position, FeetRadius);
-
+        // Gizmos.DrawSphere(feetTransform.position, FeetRadius);
+        Gizmos.DrawCube(feetTransform.position, feetBox);
         // var text = $"";
         //
         // var position = transform.position;
@@ -108,7 +111,8 @@ public class PlayerController : MonoBehaviour {
     [UsedImplicitly]
     void FixedUpdate() {
         int numberOfHits =
-            Physics2D.OverlapCircleNonAlloc(feetTransform.position, FeetRadius, overlapArray, groundMask);
+            Physics2D.OverlapBoxNonAlloc(feetTransform.position, feetBox, 0, overlapArray, groundMask);
+            // Physics2D.OverlapCircleNonAlloc(feetTransform.position, FeetRadius, overlapArray, groundMask);
         onGround = (numberOfHits > 0);
 
         if (!isCharging && !isFrozen) {
