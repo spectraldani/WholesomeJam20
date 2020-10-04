@@ -11,7 +11,9 @@ public class PlayerController : MonoBehaviour {
 
     [Header("Constants")] [SerializeField] private float runSpeed = 1f;
     [SerializeField] private float baseJumpForce = 400f;
+
     [Range(0, .3f)] [SerializeField] private float movementSmoothing = .05f;
+
     // private const float feetRadius = 0.2f;
     private readonly Vector2 feetBox = new Vector2(1.7f, 0.1f);
 
@@ -83,6 +85,7 @@ public class PlayerController : MonoBehaviour {
         if ((horizontalMove > 0 && isFacingLeft) || (horizontalMove < 0 && !isFacingLeft)) {
             Flip();
         }
+
         animator.SetBool("OnGround", onGround);
         animator.SetFloat("SpeedY", myRigidbody2D.velocity.y);
         animator.SetFloat("SpeedX", Mathf.Abs(myRigidbody2D.velocity.x));
@@ -114,8 +117,15 @@ public class PlayerController : MonoBehaviour {
     void FixedUpdate() {
         int numberOfHits =
             Physics2D.OverlapBoxNonAlloc(feetTransform.position, feetBox, 0, overlapArray, groundMask);
-            // Physics2D.OverlapCircleNonAlloc(feetTransform.position, FeetRadius, overlapArray, groundMask);
+        // Physics2D.OverlapCircleNonAlloc(feetTransform.position, FeetRadius, overlapArray, groundMask);
         onGround = (numberOfHits > 0);
+        
+        if (onGround) {
+            var plat = overlapArray[0].gameObject.GetComponent<PlatformHealth>();
+            if (plat != null) {
+                plat.TakeHit(Time.fixedDeltaTime);
+            }
+        }
 
         if (!isCharging && !isFrozen) {
             Move(horizontalMove);

@@ -31,19 +31,6 @@ public class TreeEditor : Editor {
         var currentSize = gridSerializedProperty.arraySize;
         var height = currentSize / 9;
 
-
-        // if (currentSize < height * 9) {
-        //     for (int i = 0; i < 9 * height - currentSize; i++) {
-        //         for (int j = 0; j < 9; j++) {
-        //             gridSerializedProperty.InsertArrayElementAtIndex(currentSize + i * 9 + j);
-        //         }
-        //     }
-        // } else if (currentSize > height * 9) {
-        //     for (int i = 0; i < currentSize - 9 * height; i++) {
-        //         gridSerializedProperty.DeleteArrayElementAtIndex(currentSize - i - 1);
-        //     }
-        // }
-
         EditorGUILayout.PropertyField(gridSerializedProperty);
 
         for (int i = 0; i < height; i++) {
@@ -57,7 +44,7 @@ public class TreeEditor : Editor {
                 guiStyle.normal.background = Texture2D.whiteTexture;
                 guiStyle.margin = new RectOffset(0, 10, 0, 10);
                 cell.enumValueIndex = (int)(PlatformType)EditorGUILayout.EnumPopup((PlatformType)cell.enumValueIndex,
-                    guiStyle, new[] {GUILayout.Width(25f), GUILayout.ExpandWidth(false)});
+                    guiStyle, new[] {GUILayout.MaxWidth(50f), GUILayout.ExpandWidth(true), GUILayout.MinWidth(25f)});
             }
 
             EditorGUILayout.EndHorizontal();
@@ -100,9 +87,9 @@ public class TreeEditor : Editor {
                             newBush.transform.position =
                                 new Vector2(offset.x + gridSize.x * j, offset.y + gridSize.y * i);
                             if (cell == PlatformType.MBush) {
-                                newBush.GetComponent<Branch>().ChangeBranchLength(PlatformHeight.Medium);
+                                newBush.GetComponent<Bush>().ChangeBranchLength(PlatformHeight.Medium);
                             } else if (cell == PlatformType.LBush) {
-                                newBush.GetComponent<Branch>().ChangeBranchLength(PlatformHeight.Long);
+                                newBush.GetComponent<Bush>().ChangeBranchLength(PlatformHeight.Long);
                             }
 
                             break;

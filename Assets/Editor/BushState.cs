@@ -4,19 +4,19 @@ using UnityEngine;
 
 
 
-[CustomEditor(typeof(Branch))]
-public class BranchState : Editor {
-    private Branch branch = null;
+[CustomEditor(typeof(Bush))]
+public class BushState : Editor {
+    private Bush bush = null;
     private PlatformHeight state = PlatformHeight.Short;
 
     public void OnEnable() {
-        branch = (Branch)target;
-        branch.SpriteRenderer = branch.GetComponent<SpriteRenderer>();
-        branch.ChangeBranchLength(state);
+        bush = (Bush)target;
+        bush.SpriteRenderer = bush.GetComponent<SpriteRenderer>();
+        bush.ChangeBranchLength(state);
     }
 
     public override void OnInspectorGUI() {
         state = (PlatformHeight)EditorGUILayout.EnumPopup("Platform height", state);
-        branch.ChangeBranchLength(state);
+        bush.ChangeBranchLength(state);
     }
 }

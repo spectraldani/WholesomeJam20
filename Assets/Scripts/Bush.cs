@@ -6,7 +6,7 @@ public enum PlatformHeight {
     Short, Medium, Long
 }
 
-public class Branch : MonoBehaviour {
+public class Bush : MonoBehaviour {
     [SerializeField] private Sprite mediumSprite = null;
     [SerializeField] private Sprite longSprite = null;
     [SerializeField] private Sprite shortSprite = null;
