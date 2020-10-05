@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraFollow : MonoBehaviour {
     private new Camera camera;
     [SerializeField] private Vector2 tolerance = new Vector2(0, 0);
-    [SerializeField] private float cameraSpeed = 4f;
+    [SerializeField] private float cameraSpeed = 10f;
     public Transform follow = null;
 
     private bool mustMoveX = false;
@@ -19,7 +19,7 @@ public class CameraFollow : MonoBehaviour {
 
     void Update() {
         var currentFollowPosition = follow.position;
-        currentFollowPosition.y += 5f;
+        // currentFollowPosition.y += 5f;
         var currentPosition = camera.transform.position;
 
         var distance = currentFollowPosition - currentPosition;
@@ -50,7 +50,7 @@ public class CameraFollow : MonoBehaviour {
             }
         }
 
-        // currentPosition.Set(currentFollowPosition.x, currentFollowPosition.y, currentPosition.z);
+        currentPosition.Set(currentFollowPosition.x, currentFollowPosition.y, currentPosition.z);
 
         camera.transform.position = currentPosition;
     }
