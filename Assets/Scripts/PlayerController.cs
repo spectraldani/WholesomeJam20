@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour {
     private Vector2 computedAcceleration = Vector2.zero;
     private Vector2 lastVelocity = Vector2.zero;
 
+    public bool CanJump = true;
+
     private float horizontalMove = 0f;
     private bool shouldJump = false;
     private bool onGround = false;
@@ -35,10 +37,14 @@ public class PlayerController : MonoBehaviour {
     private bool isFrozen = false;
     private bool isDragging = false;
     private readonly Collider2D[] overlapArray = new Collider2D[5];
+    private Vector2 cameraBounds;
 
     [UsedImplicitly]
     private void Awake() {
         rigidbody2D = GetComponent<Rigidbody2D>();
+        cameraBounds = new Vector2(Camera.main.orthographicSize * Screen.width / Screen.height,
+            Camera.main.orthographicSize);
+        cameraTargetTransform.position = rigidbody2D.position;
     }
 
     private void OnMouseDown() {
@@ -83,7 +89,7 @@ public class PlayerController : MonoBehaviour {
     void Update() {
         if (!isFrozen) {
             horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
-            if (Input.GetButtonDown("Jump") && onGround) {
+            if (Input.GetButtonDown("Jump") && onGround && CanJump) {
                 isCharging = true;
             }
 
@@ -160,8 +166,6 @@ public class PlayerController : MonoBehaviour {
             rigidbody2D.position =
                 Vector2.SmoothDamp(rigidbody2D.position, mousePosition, ref acceleration, Time.fixedDeltaTime);
 
-            var cameraBounds = new Vector2(Camera.main.orthographicSize * Screen.width / Screen.height,
-                Camera.main.orthographicSize);
             cameraBounds *= dragFollowDistance * cameraBounds;
             var delta = mousePosition - cameraTargetPosition;
             if (delta.x * delta.x > cameraBounds.x || delta.y * delta.y > cameraBounds.y) {

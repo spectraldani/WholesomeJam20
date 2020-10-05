@@ -37,19 +37,19 @@ TextureImporter:
     second: bunio-spritesheet_10
   - first:
       213: -7993725898839207691
-    second: bunio-spritesheet_11
+    second: idle_hair
   - first:
       213: -8911670450930917118
-    second: bunio-spritesheet_12
+    second: walk1_hair
   - first:
       213: -4097876755767431222
-    second: bunio-spritesheet_13
+    second: walk2_hair
   - first:
       213: 6875352273051420421
-    second: bunio-spritesheet_14
+    second: walk3_hair
   - first:
       213: 1484294654410707558
-    second: bunio-spritesheet_15
+    second: walk4_hair
   - first:
       213: 1622028239285963421
     second: cronch
@@ -247,7 +247,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1845
-        y: 349
+        y: 352
         width: 187
         height: 164
       alignment: 7
@@ -348,11 +348,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: bunio-spritesheet_11
+      name: idle_hair
       rect:
         serializedVersion: 2
         x: 36
-        y: 51
+        y: 48
         width: 203
         height: 231
       alignment: 7
@@ -369,7 +369,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: bunio-spritesheet_12
+      name: walk1_hair
       rect:
         serializedVersion: 2
         x: 330
@@ -390,7 +390,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: bunio-spritesheet_13
+      name: walk2_hair
       rect:
         serializedVersion: 2
         x: 629
@@ -411,7 +411,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: bunio-spritesheet_14
+      name: walk3_hair
       rect:
         serializedVersion: 2
         x: 931
@@ -432,7 +432,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: bunio-spritesheet_15
+      name: walk4_hair
       rect:
         serializedVersion: 2
         x: 1230

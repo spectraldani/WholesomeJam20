@@ -1,7 +1,12 @@
 ﻿using UnityEngine;
 
+public enum FinishAction {
+    StopRepeat, StopNext, Stop, Next
+}
+
 [System.Serializable]
 public class Dialogue {
-    public string name;
-    [TextArea(3, 20)] public string[] sentences;
+    public bool isPlayer = false;
+    public FinishAction FinishAction;
+    [TextArea(3, 20)] public string[] Sentences;
 }
