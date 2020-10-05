@@ -99,26 +99,6 @@ public class PlayerController : MonoBehaviour {
             horizontalMove = 0;
         }
 
-        if (!isDragging) {
-            Vector2 position = cameraTargetTransform.position;
-            if (Mathf.Abs(horizontalMove) > 0.01) {
-                position.x += ((Mathf.Sign(horizontalMove) * 4 + rigidbody2D.position.x) - position.x) *
-                              Time.deltaTime * runSpeed;
-                cameraTargetTransform.position = position;
-            } else {
-                position.x += (rigidbody2D.position.x - position.x) * Time.deltaTime * runSpeed;
-                cameraTargetTransform.position = position;
-            }
-
-            if (rigidbody2D.velocity.y < 3 && computedAcceleration.y < 0 && !isCharging && !onGround) {
-                position.y += (-5 + rigidbody2D.position.y - position.y) * Time.deltaTime * runSpeed;
-                cameraTargetTransform.position = position;
-            } else {
-                position.y += (5 + rigidbody2D.position.y - position.y) * Time.deltaTime * runSpeed;
-                cameraTargetTransform.position = position;
-            }
-        }
-
 
         if ((horizontalMove > 0 && isFacingLeft) || (horizontalMove < 0 && !isFacingLeft)) {
             Flip();
@@ -204,6 +184,25 @@ public class PlayerController : MonoBehaviour {
             rigidbody2D.AddForce(new Vector2(0f, jumpForce));
             shouldJump = false;
             jumpCharge = 0f;
+        }
+
+        if (!isDragging) {
+            Vector2 position = cameraTargetTransform.position;
+            Vector2 delta = Vector2.zero;
+            if (Mathf.Abs(horizontalMove) > 0.01) {
+                delta.x = ((Mathf.Sign(horizontalMove) * 4 + rigidbody2D.position.x) - position.x);
+            } else {
+                delta.x = (rigidbody2D.position.x - position.x);
+            }
+
+            if (rigidbody2D.velocity.y < 3 && computedAcceleration.y < 0 && !isCharging && !onGround) {
+                delta.y = (-3 + rigidbody2D.position.y - position.y);
+            } else {
+                delta.y = (5 + rigidbody2D.position.y - position.y);
+            }
+
+            position += delta * Time.fixedDeltaTime * runSpeed;
+            cameraTargetTransform.position = position;
         }
 
         computedAcceleration = (rigidbody2D.velocity - lastVelocity) / Time.fixedDeltaTime;
