@@ -10,6 +10,7 @@ public class TreeEditor : Editor {
     SerializedProperty gridSerializedProperty;
     private GameObject tree2Prefab;
     private GameObject tree1Prefab;
+    private GameObject treeTopPrefab;
     private GameObject branchPrefab;
     private GameObject bushPrefab;
 
@@ -19,6 +20,7 @@ public class TreeEditor : Editor {
         tree = (TreeMaker)target;
         tree2Prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/tree_2.prefab");
         tree1Prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/tree_1.prefab");
+        treeTopPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/tree_top.prefab");
 
         branchPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Branch.prefab");
         bushPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Bush.prefab");
@@ -56,7 +58,7 @@ public class TreeEditor : Editor {
             for (int i = size - 1; i >= 0; i--)
                 GameObject.DestroyImmediate(tree.transform.GetChild(i).gameObject);
 
-            var treeLength = Mathf.CeilToInt((height - 1) / 2f) + 2;
+            var treeLength = Mathf.CeilToInt((height - 1) / 2f) + 1;
 
             // Create trunks
             var startingY = tree.GetComponent<SpriteRenderer>().sprite.bounds.max.y;
@@ -71,6 +73,8 @@ public class TreeEditor : Editor {
                 instantiatedPrefab.transform.localPosition = t;
                 startingY += instantiatedPrefab.GetComponent<SpriteRenderer>().sprite.bounds.max.y;
             }
+            var treeTop = (GameObject)PrefabUtility.InstantiatePrefab(treeTopPrefab, tree.transform);
+            treeTop.transform.localPosition = new Vector2(0, startingY + tree1Prefab.GetComponent<SpriteRenderer>().sprite.bounds.max.y);
 
             var gridSize = new Vector2(4.35f, 4.8f);
 
