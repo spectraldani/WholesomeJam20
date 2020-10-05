@@ -4,8 +4,9 @@ using UnityEngine;
 
 // ReSharper disable once CheckNamespace
 public class PlayerController : MonoBehaviour {
-    [SerializeField] private Rigidbody2D myRigidbody2D = null;
+    [SerializeField] private new Rigidbody2D rigidbody2D;
     [SerializeField] private Transform feetTransform = null;
+    [SerializeField] private Transform cameraTargetTransform = null;
     [SerializeField] private Animator animator = null;
     [SerializeField] private LayerMask groundMask = 0;
 
@@ -20,6 +21,9 @@ public class PlayerController : MonoBehaviour {
     /// State Variables
     private Vector2 acceleration = Vector2.zero;
 
+    private Vector2 computedAcceleration = Vector2.zero;
+    private Vector2 lastVelocity = Vector2.zero;
+
     private float horizontalMove = 0f;
     private bool shouldJump = false;
     private bool onGround = false;
@@ -31,14 +35,14 @@ public class PlayerController : MonoBehaviour {
 
     [UsedImplicitly]
     private void Awake() {
-        myRigidbody2D = GetComponent<Rigidbody2D>();
+        rigidbody2D = GetComponent<Rigidbody2D>();
     }
 
 
     private void Move(float speed, float smoothTime) {
-        Vector2 targetVelocity = new Vector2(speed, myRigidbody2D.velocity.y);
-        myRigidbody2D.velocity = Vector2.SmoothDamp(
-            myRigidbody2D.velocity, targetVelocity, ref acceleration,
+        Vector2 targetVelocity = new Vector2(speed, rigidbody2D.velocity.y);
+        rigidbody2D.velocity = Vector2.SmoothDamp(
+            rigidbody2D.velocity, targetVelocity, ref acceleration,
             smoothTime, Mathf.Infinity, Time.deltaTime
         );
     }
@@ -51,9 +55,9 @@ public class PlayerController : MonoBehaviour {
         if (freeze) {
             isFrozen = true;
             acceleration = Vector2.zero;
-            var velocity = myRigidbody2D.velocity;
+            var velocity = rigidbody2D.velocity;
             velocity.x = 0;
-            myRigidbody2D.velocity = velocity;
+            rigidbody2D.velocity = velocity;
             isCharging = false;
             jumpCharge = 0f;
         } else {
@@ -81,14 +85,34 @@ public class PlayerController : MonoBehaviour {
             horizontalMove = 0;
         }
 
+        if (Mathf.Abs(horizontalMove) > 0.01) {
+            Vector2 position = cameraTargetTransform.localPosition;
+            position.x += ((Mathf.Sign(horizontalMove) * 4) - position.x) * Time.deltaTime * runSpeed;
+            cameraTargetTransform.localPosition = position;
+        } else {
+            Vector2 position = cameraTargetTransform.localPosition;
+            position.x -= position.x * Time.deltaTime * runSpeed;
+            cameraTargetTransform.localPosition = position;
+        }
+
+        if (rigidbody2D.velocity.y < 3 && computedAcceleration.y < 0 && !isCharging && !onGround) {
+            Vector2 position = cameraTargetTransform.localPosition;
+            position.y -= (5 + position.y) * Time.deltaTime * runSpeed;
+            cameraTargetTransform.localPosition = position;
+        } else {
+            Vector2 position = cameraTargetTransform.localPosition;
+            position.y -= position.y * Time.deltaTime * runSpeed;
+            cameraTargetTransform.localPosition = position;
+        }
+
 
         if ((horizontalMove > 0 && isFacingLeft) || (horizontalMove < 0 && !isFacingLeft)) {
             Flip();
         }
 
         animator.SetBool("OnGround", onGround);
-        animator.SetFloat("SpeedY", myRigidbody2D.velocity.y);
-        animator.SetFloat("SpeedX", Mathf.Abs(myRigidbody2D.velocity.x));
+        animator.SetFloat("SpeedY", rigidbody2D.velocity.y);
+        animator.SetFloat("SpeedX", Mathf.Abs(rigidbody2D.velocity.x));
         animator.SetFloat("Charge", jumpCharge);
     }
 
@@ -105,12 +129,12 @@ public class PlayerController : MonoBehaviour {
         Gizmos.color = Color.yellow;
         // Gizmos.DrawSphere(feetTransform.position, FeetRadius);
         Gizmos.DrawCube(feetTransform.position, feetBox);
-        // var text = $"";
-        //
-        // var position = transform.position;
-        // position.x -= 0.6f;
-        // position.y += 1f;
-        // Handles.Label(position, text);
+        var text = rigidbody2D != null ? $"Acc: {computedAcceleration.y}\nVel: {rigidbody2D.velocity.y}" : "";
+
+        var position = transform.position;
+        position.x -= 0.6f;
+        position.y += 3f;
+        Handles.Label(position, text);
     }
 
     [UsedImplicitly]
@@ -119,7 +143,7 @@ public class PlayerController : MonoBehaviour {
             Physics2D.OverlapBoxNonAlloc(feetTransform.position, feetBox, 0, overlapArray, groundMask);
         // Physics2D.OverlapCircleNonAlloc(feetTransform.position, FeetRadius, overlapArray, groundMask);
         onGround = (numberOfHits > 0);
-        
+
         if (onGround) {
             var plat = overlapArray[0].gameObject.GetComponent<PlatformHealth>();
             if (plat != null) {
@@ -139,13 +163,16 @@ public class PlayerController : MonoBehaviour {
                 jumpForce *= 1f + Mathf.Clamp(jumpCharge - 0.5f, 0, 0.5f);
             }
 
-            var velocity = myRigidbody2D.velocity;
+            var velocity = rigidbody2D.velocity;
             velocity.y = 0;
-            myRigidbody2D.velocity = velocity;
-            myRigidbody2D.AddForce(new Vector2(0f, jumpForce));
+            rigidbody2D.velocity = velocity;
+            rigidbody2D.AddForce(new Vector2(0f, jumpForce));
             shouldJump = false;
             jumpCharge = 0f;
         }
+
+        computedAcceleration = (rigidbody2D.velocity - lastVelocity) / Time.fixedDeltaTime;
+        lastVelocity = rigidbody2D.velocity;
     }
 
     [UsedImplicitly]

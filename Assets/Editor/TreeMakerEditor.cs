@@ -73,8 +73,10 @@ public class TreeEditor : Editor {
                 instantiatedPrefab.transform.localPosition = t;
                 startingY += instantiatedPrefab.GetComponent<SpriteRenderer>().sprite.bounds.max.y;
             }
+
             var treeTop = (GameObject)PrefabUtility.InstantiatePrefab(treeTopPrefab, tree.transform);
-            treeTop.transform.localPosition = new Vector2(0, startingY + tree1Prefab.GetComponent<SpriteRenderer>().sprite.bounds.max.y);
+            treeTop.transform.localPosition = new Vector2(0,
+                startingY + tree1Prefab.GetComponent<SpriteRenderer>().sprite.bounds.max.y);
 
             var gridSize = new Vector2(4.35f, 4.8f);
 
@@ -105,10 +107,24 @@ public class TreeEditor : Editor {
                             newBranch.transform.position =
                                 new Vector2(offset.x + gridSize.x * j, offset.y + gridSize.y * i);
                             if (j > 4) {
-                                newBranch.transform.localScale = new Vector3(-1,1,1);
+                                newBranch.transform.localScale = new Vector3(-1, 1, 1);
                                 newBranch.transform.position =
-                                    new Vector2(newBranch.transform.position.x-7.6f, newBranch.transform.position.y);
+                                    new Vector2(newBranch.transform.position.x - 7.6f, newBranch.transform.position.y);
                             }
+
+                            switch (j) {
+                                case 3:
+                                case 5:
+                                    newBranch.GetComponent<Branch>().ChangeBranchLength(BranchLength.Short);
+                                    break;
+                                case 0:
+                                case 1:
+                                case 7:
+                                case 8:
+                                    newBranch.GetComponent<Branch>().ChangeBranchLength(BranchLength.Long);
+                                    break;
+                            }
+
                             break;
                         }
                         case PlatformType.None:

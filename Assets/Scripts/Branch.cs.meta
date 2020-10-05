@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: f1881ebae5e0fd040a487fb0256a389d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - mediumSprite: {fileID: 21300000, guid: d31283382b0c82543acba0957f7670f2, type: 3}
+  - longSprite: {fileID: 21300000, guid: d5f79a3d4dc038c429b7f271d39d3c87, type: 3}
+  - shortSprite: {fileID: 21300000, guid: 8ac6eade1d877ca45adae4f79f0adcef, type: 3}
+  - SpriteRenderer: {instanceID: 0}
+  - MainBranchTransform: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
