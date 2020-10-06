@@ -29,7 +29,7 @@ public class TreeEditor : Editor {
     public override void OnInspectorGUI() {
         serializedObject.Update();
         gridSerializedProperty.arraySize =
-            9 * EditorGUILayout.IntSlider("Height", gridSerializedProperty.arraySize / 9, 0, 10);
+            9 * EditorGUILayout.IntSlider("Height", gridSerializedProperty.arraySize / 9, 0, 30);
         var currentSize = gridSerializedProperty.arraySize;
         var height = currentSize / 9;
 
@@ -58,7 +58,7 @@ public class TreeEditor : Editor {
             for (int i = size - 1; i >= 0; i--)
                 GameObject.DestroyImmediate(tree.transform.GetChild(i).gameObject);
 
-            var treeLength = Mathf.CeilToInt((height - 1) / 2f) + 1;
+            var treeLength = Mathf.CeilToInt((height - 1) / 2f) + 0;
 
             // Create trunks
             var startingY = tree.GetComponent<SpriteRenderer>().sprite.bounds.max.y;

@@ -94,49 +94,55 @@ public class DialogueManager : MonoBehaviour {
     }
 
     public void NextLine() {
-        switch (lines.Count) {
-            case 0: {
-                var currentParagraph = currentTrigger.Paragraphs[currentParagraphIndex];
-                switch (currentParagraph.FinishAction) {
-                    case FinishAction.Next:
-                        currentParagraphIndex++;
-                        NextParagraph();
-                        NextLine();
-                        break;
-                    case FinishAction.StopRepeat:
-                        canSubmit = false;
-                        currentTrigger.FinishDialogue();
-                        currentTrigger = null;
-                        canvas.gameObject.SetActive(false);
-                        player.SetFreeze(false);
-                        break;
-                    case FinishAction.StopNext:
-                        canSubmit = false;
-                        currentTrigger.FinishDialogue();
-                        canvas.gameObject.SetActive(false);
-                        player.SetFreeze(false);
-                        currentTrigger.Paragraphs = currentTrigger.Paragraphs.Skip(1).ToArray();
-                        currentTrigger = null;
-                        break;
-                    case FinishAction.Stop:
-                        canSubmit = false;
-                        currentTrigger.FinishDialogue();
-                        canvas.gameObject.SetActive(false);
-                        player.SetFreeze(false);
-                        currentTrigger.enabled = false;
-                        currentTrigger = null;
-                        break;
-                }
+        while (true) {
+            switch (lines.Count) {
+                case 0: {
+                    var currentParagraph = currentTrigger.Paragraphs[currentParagraphIndex];
+                    switch (currentParagraph.FinishAction) {
+                        case FinishAction.Next:
+                            currentParagraphIndex++;
+                            NextParagraph();
+                            continue;
+                        case FinishAction.StopRepeat:
+                            canSubmit = false;
+                            StartCoroutine(currentTrigger.FinishDialogue());
+                            currentTrigger = null;
+                            canvas.gameObject.SetActive(false);
+                            player.SetFreeze(false);
+                            break;
+                        case FinishAction.StopNext:
+                            canSubmit = false;
+                            StartCoroutine(currentTrigger.FinishDialogue());
+                            canvas.gameObject.SetActive(false);
+                            player.SetFreeze(false);
+                            currentTrigger.Paragraphs = currentTrigger.Paragraphs.Skip(1).ToArray();
+                            currentTrigger = null;
+                            break;
+                        case FinishAction.Stop:
+                            canSubmit = false;
+                            StartCoroutine(currentTrigger.FinishDialogue());
+                            canvas.gameObject.SetActive(false);
+                            player.SetFreeze(false);
+                            currentTrigger.GetComponent<Collider2D>().enabled = false;
+                            // currentTrigger.enabled = false;
+                            currentTrigger = null;
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
 
-                break;
+                    break;
+                }
+                case 1:
+                    nextSign.gameObject.SetActive(false);
+                    bodyTextbox.text = lines.Dequeue();
+                    break;
+                default:
+                    bodyTextbox.text = lines.Dequeue();
+                    break;
             }
-            case 1:
-                nextSign.gameObject.SetActive(false);
-                bodyTextbox.text = lines.Dequeue();
-                break;
-            default:
-                bodyTextbox.text = lines.Dequeue();
-                break;
+
+            break;
         }
     }
 }

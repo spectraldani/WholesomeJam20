@@ -4,12 +4,15 @@ using JetBrains.Annotations;
 using UnityEngine;
 
 public class DialogueTrigger : MonoBehaviour {
+    public bool IsAuto = false;
+    public bool GiveJump = false;
     public Dialogue[] Paragraphs;
     public float YDelta = 0;
     private SpriteRenderer spriteRenderer = null;
     private PlayerController player = null;
     private bool canStart = true;
     private bool isIn = false;
+    private bool pastJumpStatus;
 
     void Awake() {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -26,22 +29,28 @@ public class DialogueTrigger : MonoBehaviour {
         StartCoroutine(FindObjectOfType<DialogueManager>().StartDialogue(this));
     }
 
-    public void FinishDialogue() {
+    public IEnumerator FinishDialogue() {
+        if (GiveJump) {
+            pastJumpStatus = true;
+        }
+        yield return new WaitForSeconds(0.2f);
         canStart = true;
+        yield return null;
     }
 
     public void OnTriggerExit2D(Collider2D x) {
-        player.CanJump = true;
+        player.CanJump = pastJumpStatus;
         isIn = false;
     }
 
     public void Update() {
-        if (Input.GetButtonDown("Jump") && canStart && isIn) {
+        if ((Input.GetButtonDown("Jump") || IsAuto) && canStart && isIn) {
             TriggerDialogue();
         }
     }
 
     public void OnTriggerEnter2D(Collider2D x) {
+        pastJumpStatus = player.CanJump;
         player.CanJump = false;
         isIn = true;
     }

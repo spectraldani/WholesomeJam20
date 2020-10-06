@@ -92,6 +92,11 @@ public class PlayerController : MonoBehaviour {
 
     [UsedImplicitly]
     void Update() {
+        if (Input.GetKeyUp(KeyCode.Escape)) {
+            Application.Quit();
+        }
+
+
         if (!isFrozen) {
             horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
             if (Input.GetButtonDown("Jump") && onGround && CanJump) {
@@ -136,15 +141,15 @@ public class PlayerController : MonoBehaviour {
 
     [UsedImplicitly]
     void OnDrawGizmos() {
-        Gizmos.color = Color.yellow;
-        // Gizmos.DrawSphere(feetTransform.position, FeetRadius);
-        Gizmos.DrawCube(feetTransform.position, feetBox);
-        var text = rigidbody2D != null ? $"Acc: {computedAcceleration.y}\nVel: {rigidbody2D.velocity.y}" : "";
-
-        var position = transform.position;
-        position.x -= 0.6f;
-        position.y += 3f;
-        Handles.Label(position, text);
+        // Gizmos.color = Color.yellow;
+        // // Gizmos.DrawSphere(feetTransform.position, FeetRadius);
+        // Gizmos.DrawCube(feetTransform.position, feetBox);
+        // var text = rigidbody2D != null ? $"Acc: {computedAcceleration.y}\nVel: {rigidbody2D.velocity.y}" : "";
+        //
+        // var position = transform.position;
+        // position.x -= 0.6f;
+        // position.y += 3f;
+        // Handles.Label(position, text);
     }
 
     [UsedImplicitly]

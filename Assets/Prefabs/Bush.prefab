@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 9189368725582989166}
   - component: {fileID: 6268537387250813513}
   - component: {fileID: 8440377108095525540}
+  - component: {fileID: 7008740465014532359}
   m_Layer: 8
   m_Name: Bush
   m_TagString: Untagged
@@ -160,6 +161,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SecDuration: 4
+--- !u!95 &7008740465014532359
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5027471586423358887}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 14c344bb4b3cd024f9a472f5e92c8e5b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &7377914597895893619
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -225,6 +245,11 @@ PrefabInstance:
     - target: {fileID: 2545318937599704825, guid: 533a2007fa9e39644a0e6db824eff20e,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3186801007410390160, guid: 533a2007fa9e39644a0e6db824eff20e,
+        type: 3}
+      propertyPath: playOnAwake
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
