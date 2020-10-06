@@ -39,12 +39,17 @@ public class PlayerController : MonoBehaviour {
     private readonly Collider2D[] overlapArray = new Collider2D[5];
     private Vector2 cameraBounds;
 
+    //GOTTA GAMBIARRA FAST
+    private SoundManager sm;
+    private bool chargeSoundPlayed = false;
+
     [UsedImplicitly]
     private void Awake() {
         rigidbody2D = GetComponent<Rigidbody2D>();
         cameraBounds = new Vector2(Camera.main.orthographicSize * Screen.width / Screen.height,
             Camera.main.orthographicSize);
         cameraTargetTransform.position = rigidbody2D.position;
+        sm = GetComponent<SoundManager>();
     }
 
     private void OnMouseDown() {
@@ -91,11 +96,16 @@ public class PlayerController : MonoBehaviour {
             horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
             if (Input.GetButtonDown("Jump") && onGround && CanJump) {
                 isCharging = true;
+                if (!chargeSoundPlayed) {
+                    sm.Play(3);
+                    chargeSoundPlayed = true;
+                }
             }
 
             if (Input.GetButtonUp("Jump") && isCharging) {
                 shouldJump = true;
                 isCharging = false;
+                chargeSoundPlayed = false;
             }
 
             if (isCharging) {
@@ -188,6 +198,8 @@ public class PlayerController : MonoBehaviour {
             rigidbody2D.AddForce(new Vector2(0f, jumpForce));
             shouldJump = false;
             jumpCharge = 0f;
+            //THIS IS A GAMBIARRA
+            sm.Play(2);
         }
 
         if (!isDragging) {
