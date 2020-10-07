@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
-
+using System;
 // ReSharper disable once CheckNamespace
 public class PlayerController : MonoBehaviour {
     [SerializeField] private new Rigidbody2D rigidbody2D;
@@ -39,9 +39,9 @@ public class PlayerController : MonoBehaviour {
     private readonly Collider2D[] overlapArray = new Collider2D[5];
     private Vector2 cameraBounds;
 
-    //GOTTA GAMBIARRA FAST
-    private SoundManager sm;
-    private bool chargeSoundPlayed = false;
+
+    public event Action<float> jumpEvent;
+    public event Action chargeStartEvent, chargeStopEvent, leftFootTouchingGroundEvent, rightFootTouchingGroundEvent;
 
     [UsedImplicitly]
     private void Awake() {
@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour {
         cameraBounds = new Vector2(Camera.main.orthographicSize * Screen.width / Screen.height,
             Camera.main.orthographicSize);
         cameraTargetTransform.position = rigidbody2D.position;
-        sm = GetComponent<SoundManager>();
+        
     }
 
     private void OnMouseDown() {
@@ -101,16 +101,13 @@ public class PlayerController : MonoBehaviour {
             horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
             if (Input.GetButtonDown("Jump") && onGround && CanJump) {
                 isCharging = true;
-                if (!chargeSoundPlayed) {
-                    sm.Play(3);
-                    chargeSoundPlayed = true;
-                }
+                chargeStartEvent.Invoke();
             }
 
             if (Input.GetButtonUp("Jump") && isCharging) {
                 shouldJump = true;
                 isCharging = false;
-                chargeSoundPlayed = false;
+                chargeStopEvent.Invoke();
             }
 
             if (isCharging) {
@@ -203,8 +200,8 @@ public class PlayerController : MonoBehaviour {
             rigidbody2D.AddForce(new Vector2(0f, jumpForce));
             shouldJump = false;
             jumpCharge = 0f;
-            //THIS IS A GAMBIARRA
-            sm.Play(2);
+
+            jumpEvent.Invoke(jumpCharge);
         }
 
         if (!isDragging) {
@@ -230,6 +227,12 @@ public class PlayerController : MonoBehaviour {
         lastVelocity = rigidbody2D.velocity;
     }
 
+    private void LeftFootTouchingGround() {
+        leftFootTouchingGroundEvent.Invoke();
+    }
+    private void RightFootTouchingGround() {
+        rightFootTouchingGroundEvent.Invoke();
+    }
     [UsedImplicitly]
     void OnTriggerStay2D(Collider2D aCol) {
         if ((groundMask & 1 << aCol.gameObject.layer) == 0) return;
